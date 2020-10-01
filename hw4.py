@@ -183,20 +183,20 @@ class TestAllMethods(unittest.TestCase):
 
 	# Test that estimated cost works properly.
 	def test_estimated_cost(self):
-		self.assertEqual(self.d1.estimated_cost(self.p1, 5), 40)
-		self.assertEqual(self.d2.estimated_cost(self.p2, 6), 69)
+		self.assertEqual(self.d1.estimated_cost(self.p1, 5), 80)
+		self.assertEqual(self.d2.estimated_cost(self.p2, 6), 79)
 
 
 	# Check that pharmacy can properly see when it is empty
 	def test_has_medicine(self):		
 
 		# Test to see if has_medicine returns True when a pharmacy has medicine left
-		
+		self.assertEqual(self.p1.has_medicine("Vicodin", 5), True)
 		# Test to see if has_medicine returns True when a pharmacy has 
 		# just a little bit of medicine left (i.e., medicine_left == 1)
-		
+		self.assertEqual(self.p2.has_medicine("Vicodin", 9), True)
 		# Test to see if has_medicine returns False when a pharmacy has no drugs left
-		pass
+		self.assertEqual(self.p1.has_medicine("Aderrall", 34), False)
 
 	# Test order medicine
 	def test_order_medicine(self):
