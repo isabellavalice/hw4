@@ -2,8 +2,9 @@ import random
 import unittest
 
 ## Name : Isabella Valice
+## UMID: 83909799
 ## People you worked with : Isabella Valice, Orli Forster, Margeaux Fortin
-## Github URL :
+## Github URL : https://github.com/isabellavalice/hw4
 
 
 
@@ -30,7 +31,7 @@ class Customer:
 	def order_medicine(self, driver, pharmacy, drug_name, quantity):
 		if not(driver.know_pharmacy(pharmacy)):
 			print("Sorry, this service doesn't deliver from that pharmacy. Please try a different pharmacy!")
-		elif self.money < driver.estimated_cost(pharmacy):
+		elif self.money < driver.estimated_cost(pharmacy, quantity):
 			print("Don't have enough money for that :( Please add more money to your account!")
 		elif not(pharmacy.has_medicine(drug_name, quantity)):
 			print("Our pharmacy has run out of " + drug_name + " :( Please try a different pharmacy!")
@@ -109,8 +110,7 @@ class Pharmacy:
 	def stock_up(self, drug_name, quantity):
 		self.inventory[drug_name] = self.inventory.get(drug_name, 0) + quantity
 	def __str__(self):
-		return "Hello, we are " + self.name + ". These are the drugs that we currently have in stock" +self.inventory + 
-		". We charge $" + self.cost + " per pill. We have $" + self.money + " in total."
+		return "Hello, we are " + self.name + ". These are the drugs that we currently have in stock" +self.inventory + ". We charge $" + self.cost + " per pill. We have $" + self.money + " in total."
 
 class TestAllMethods(unittest.TestCase):
 
@@ -201,23 +201,34 @@ class TestAllMethods(unittest.TestCase):
 	# Test order medicine
 	def test_order_medicine(self):
 		# test if customer doesn't have enough money to order
+		money_before = self.c1.money
+		self.c1.order_medicine(self.d2, self.p1,"Vicodin", 4)
+		money_after = self.c1.money
+		self.assertEqual(money_before, money_after)
 
 		# test if the pharmacy doesn't have medicine left in stock
-
+		med_before = self.p2.inventory["Vicodin"]
+		self.c2.order_medicine(self.d2, self.p2, "Vicodin", 11)
+		med_after = self.p2.inventory["Vicodin"]
+		self.assertEqual(med_before, med_after)
 		# check if the delivery drive can deliver from that pharmacy
-		pass
+		
+		deliver_before = self.d2.know_pharmacy("CVS")
+		self.c1.order_medicine(self.d2, self.p3, "Vicodin", 5)
+		deliver_after = self.d2.know_pharmacy("CVS")
+		self.assertEqual(deliver_before, deliver_after)
 
 
 def main():
 	inventory1 = {"Advil": 20, "Aleeve": 120}
-	inventory2 = {"Claritin":8 "Penicillin": 15}
+	inventory2 = {"Claritin":8, "Penicillin": 15}
 	cust1 = Customer("Jane", 150)
 	cust2 = Customer("Alex", 30)
 	pharm1 = Pharmacy("CVS", inventory1, 12, 919)
 	pharm2 = Pharmacy("Walgreens", inventory2, 10, 109)
 	driver1 = Driver("Bill", 650, [pharm1, pharm2], 4)
 	driver2 = Driver("Linda", 50, [pharm1, pharm2], 6)
-	cust1.order_medicine(driver1, pharm1, "Claritin", 5)
+	cust1.order_medicine(driver1, pharm1, "Advil", 5)
 	cust2.order_medicine(driver2, pharm2, "Aleeve", 3)
 
 	
